@@ -992,13 +992,7 @@
 
                     <div class="purchase-methods">
                         <button class="btn-payment" onclick="openMercadoPago()">
-                            💳 Cartão de Crédito via Mercado Pago
-                        </button>
-                        <button class="btn-payment" onclick="showPixInfo()">
-                            💰 Pix
-                        </button>
-                        <button class="btn-payment" onclick="showBoletoInfo()">
-                            📄 Boleto Bancário
+                            💳 Pagar com Cartão de Crédito
                         </button>
                     </div>
 
@@ -1051,6 +1045,11 @@
 
     <script>
         let appliances = [];
+        let currentSessionId = null;
+
+        // URL do servidor (mude para sua URL em produção)
+        const API_URL = 'http://localhost:3000';
+        const MERCADO_PAGO_LINK = 'https://link.mercadopago.com.br/economizeeletricidad';
 
         function startAnalyzer() {
             document.getElementById('welcomeScreen').style.display = 'none';
@@ -1081,34 +1080,61 @@
             document.getElementById('resultsCard').style.display = 'block';
         }
 
-        function openMercadoPago() {
-            const mercadoPagoLink = 'https://link.mercadopago.com.br/economizeeletricidad';
-            window.open(mercadoPagoLink, '_blank');
+        async function openMercadoPago() {
+            try {
+                // Cria uma sessão de pagamento
+                const response = await fetch(`${API_URL}/api/create-session`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
 
-            alert('Você será redirecionado para o Mercado Pago.\n\nApós completar o pagamento, sua análise será desbloqueada automaticamente!');
+                const data = await response.json();
+                currentSessionId = data.sessionId;
 
-            setTimeout(() => {
-                analysisPurchased = true;
-                closePurchaseModal();
-                document.getElementById('resultsCard').style.display = 'block';
-            }, 2000);
+                // Salva a sessão no localStorage para verificar depois
+                localStorage.setItem('paymentSessionId', currentSessionId);
+
+                alert('Você será redirecionado para o Mercado Pago.\n\nApós completar o pagamento, sua análise será desbloqueada automaticamente!');
+
+                // Abre o link do Mercado Pago
+                window.open(MERCADO_PAGO_LINK, '_blank');
+
+                // Começa a verificar se o pagamento foi confirmado
+                checkPaymentStatus();
+
+            } catch (error) {
+                console.error('Erro ao criar sessão:', error);
+                alert('Erro ao processar pagamento. Tente novamente.');
+            }
         }
 
-        function showPixInfo() {
-            const pixMessage = `Realize o pagamento via Pix para:\n\nrenatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós confirmar o pagamento, sua análise será desbloqueada.`;
-            alert(pixMessage);
+        async function checkPaymentStatus() {
+            const sessionId = localStorage.getItem('paymentSessionId');
+            if (!sessionId) return;
 
-            setTimeout(() => {
-                analysisPurchased = true;
-                closePurchaseModal();
-                document.getElementById('resultsCard').style.display = 'block';
-            }, 2000);
+            // Verifica a cada 3 segundos se o pagamento foi confirmado
+            const checkInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`${API_URL}/api/check-payment/${sessionId}`);
+                    const data = await response.json();
+
+                    if (data.paid) {
+                        clearInterval(checkInterval);
+                        analysisPurchased = true;
+                        closePurchaseModal();
+                        document.getElementById('resultsCard').style.display = 'block';
+                        localStorage.removeItem('paymentSessionId');
+                        alert('✅ Pagamento confirmado! Sua análise foi desbloqueada.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao verificar pagamento:', error);
+                }
+            }, 3000);
+
+            // Para de verificar após 15 minutos
+            setTimeout(() => clearInterval(checkInterval), 15 * 60 * 1000);
         }
 
-        function showBoletoInfo() {
-            const boletoMessage = `Para pagar via boleto, entre em contato:\n\nEmail: renatobalves@gmail.com\n\nValor: R$ 29,90\n\nNota: Boleto requer confirmação manual de pagamento.`;
-            alert(boletoMessage);
-        }
 
         function addPreset(name, wattage, hours, days) {
             document.getElementById('applianceName').value = name;
