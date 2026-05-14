@@ -15,7 +15,8 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
+            overflow-x: hidden;
         }
 
         .welcome-screen {
@@ -391,9 +392,36 @@
             font-style: italic;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 1024px) {
             .main-content {
                 grid-template-columns: 1fr;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             .results-grid {
@@ -401,7 +429,174 @@
             }
 
             header h1 {
+                font-size: 1.5em;
+            }
+
+            header p {
+                font-size: 0.95em;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+                border-radius: 10px;
+            }
+
+            .welcome-header h1 {
                 font-size: 1.8em;
+            }
+
+            .welcome-content h2 {
+                font-size: 1.3em;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .preset-btn {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+
+            .benefit-item {
+                gap: 10px;
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .benefit-icon {
+                min-width: 40px;
+                font-size: 1.5em;
+            }
+
+            .benefit-text strong {
+                font-size: 0.95em;
+            }
+
+            .benefit-text p {
+                font-size: 0.85em;
+            }
+
+            .result-box h3 {
+                font-size: 0.8em;
+            }
+
+            .result-value {
+                font-size: 1.5em;
+            }
+
+            .purchase-content {
+                padding: 25px;
+                max-width: 90%;
+            }
+
+            .purchase-header h2 {
+                font-size: 1.5em;
+            }
+
+            .price-tag {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            header h1 {
+                font-size: 1.2em;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .welcome-card {
+                padding: 15px;
+            }
+
+            .welcome-header h1 {
+                font-size: 1.4em;
+            }
+
+            .welcome-header p {
+                font-size: 0.9em;
+            }
+
+            .welcome-content h2 {
+                font-size: 1.1em;
+                margin-bottom: 20px;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+
+            .preset-btn {
+                padding: 5px;
+                font-size: 0.65em;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .appliance-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-delete {
+                align-self: flex-start;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 0.9em;
+                margin-bottom: 4px;
+            }
+
+            input, select {
+                font-size: 16px;
+                padding: 8px;
+            }
+
+            .purchase-content {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .purchase-header h2 {
+                font-size: 1.2em;
+            }
+
+            .price-tag {
+                font-size: 1.8em;
+            }
+
+            .btn-payment {
+                padding: 12px;
+                font-size: 0.9em;
             }
         }
 
