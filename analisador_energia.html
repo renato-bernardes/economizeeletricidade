@@ -1002,7 +1002,6 @@
                         </button>
                     </div>
 
-                    <button class="btn-skip" onclick="skipPurchase()">Continuar sem comprar</button>
                 </div>
             </div>
 
@@ -1082,36 +1081,33 @@
             document.getElementById('resultsCard').style.display = 'block';
         }
 
-        function skipPurchase() {
-            analysisPurchased = true;
-            closePurchaseModal();
-            document.getElementById('resultsCard').style.display = 'block';
-        }
-
         function openMercadoPago() {
             const mercadoPagoLink = 'https://link.mercadopago.com.br/economizeeletricidad';
             window.open(mercadoPagoLink, '_blank');
+
+            alert('Você será redirecionado para o Mercado Pago.\n\nApós completar o pagamento, sua análise será desbloqueada automaticamente!');
+
             setTimeout(() => {
                 analysisPurchased = true;
                 closePurchaseModal();
                 document.getElementById('resultsCard').style.display = 'block';
-            }, 1000);
+            }, 2000);
         }
 
         function showPixInfo() {
-            const pixMessage = `Realize o pagamento via Pix para:\n\nrenatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós o pagamento, sua análise será desbloqueada automaticamente.`;
+            const pixMessage = `Realize o pagamento via Pix para:\n\nrenatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós confirmar o pagamento, sua análise será desbloqueada.`;
             alert(pixMessage);
-            analysisPurchased = true;
-            closePurchaseModal();
-            document.getElementById('resultsCard').style.display = 'block';
+
+            setTimeout(() => {
+                analysisPurchased = true;
+                closePurchaseModal();
+                document.getElementById('resultsCard').style.display = 'block';
+            }, 2000);
         }
 
         function showBoletoInfo() {
-            const boletoMessage = `Para receber um boleto, entre em contato:\n\nEmail: renatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós o pagamento confirmado, sua análise será desbloqueada.`;
+            const boletoMessage = `Para pagar via boleto, entre em contato:\n\nEmail: renatobalves@gmail.com\n\nValor: R$ 29,90\n\nNota: Boleto requer confirmação manual de pagamento.`;
             alert(boletoMessage);
-            analysisPurchased = true;
-            closePurchaseModal();
-            document.getElementById('resultsCard').style.display = 'block';
         }
 
         function addPreset(name, wattage, hours, days) {
