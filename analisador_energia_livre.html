@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analisador de Gasto de Energia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+
+        .welcome-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .welcome-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .welcome-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .welcome-header h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .welcome-header p {
+            color: #999;
+            font-size: 1.1em;
+        }
+
+        .welcome-content h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .benefit-item.alert-safety {
+            background: #fff3cd;
+            border-left: 4px solid #ff6b6b;
+            padding: 20px;
+        }
+
+        .alert-safety .benefit-text strong {
+            color: #ff6b6b;
+        }
+
+        .alert-safety .benefit-text p {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .benefit-icon {
+            font-size: 2em;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .benefit-text strong {
+            display: block;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .benefit-text p {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .stats-box h3 {
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .stats-box p {
+            margin: 10px 0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .analyzer-screen {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.95em;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-clear:hover {
+            background: #d0d0d0;
+        }
+
+        .btn-delete {
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-delete:hover {
+            background: #ff5252;
+        }
+
+        .appliance-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .appliance-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .appliance-info {
+            flex: 1;
+        }
+
+        .appliance-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .appliance-details {
+            font-size: 0.9em;
+            color: #666;
+            margin: 3px 0;
+        }
+
+        .appliance-consumption {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #764ba2;
+            margin-top: 5px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .result-box h3 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .result-value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .summary-card {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #999;
+            padding: 30px;
+            font-style: italic;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+
+            header p {
+                font-size: 0.95em;
+            }
+
+            .card {
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            .welcome-card {
+                padding: 20px;
+                border-radius: 10px;
+            }
+
+            .welcome-header h1 {
+                font-size: 1.8em;
+            }
+
+            .welcome-content h2 {
+                font-size: 1.3em;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .preset-btn {
+                padding: 6px;
+                font-size: 0.75em;
+            }
+
+            .benefit-item {
+                gap: 10px;
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+
+            .benefit-icon {
+                min-width: 40px;
+                font-size: 1.5em;
+            }
+
+            .benefit-text strong {
+                font-size: 0.95em;
+            }
+
+            .benefit-text p {
+                font-size: 0.85em;
+            }
+
+            .result-box h3 {
+                font-size: 0.8em;
+            }
+
+            .result-value {
+                font-size: 1.5em;
+            }
+
+            .purchase-content {
+                padding: 25px;
+                max-width: 90%;
+            }
+
+            .purchase-header h2 {
+                font-size: 1.5em;
+            }
+
+            .price-tag {
+                font-size: 2em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 8px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+
+            header h1 {
+                font-size: 1.2em;
+            }
+
+            .card {
+                padding: 12px;
+            }
+
+            .welcome-card {
+                padding: 15px;
+            }
+
+            .welcome-header h1 {
+                font-size: 1.4em;
+            }
+
+            .welcome-header p {
+                font-size: 0.9em;
+            }
+
+            .welcome-content h2 {
+                font-size: 1.1em;
+                margin-bottom: 20px;
+            }
+
+            .preset-buttons {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 5px;
+            }
+
+            .preset-btn {
+                padding: 5px;
+                font-size: 0.65em;
+            }
+
+            .button-group {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .appliance-item {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .btn-delete {
+                align-self: flex-start;
+            }
+
+            .form-group {
+                margin-bottom: 12px;
+            }
+
+            label {
+                font-size: 0.9em;
+                margin-bottom: 4px;
+            }
+
+            input, select {
+                font-size: 16px;
+                padding: 8px;
+            }
+
+            .purchase-content {
+                padding: 20px;
+                max-width: 95%;
+            }
+
+            .purchase-header h2 {
+                font-size: 1.2em;
+            }
+
+            .price-tag {
+                font-size: 1.8em;
+            }
+
+            .btn-payment {
+                padding: 12px;
+                font-size: 0.9em;
+            }
+        }
+
+        .preset-group {
+            margin-bottom: 15px;
+        }
+
+        .preset-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .preset-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .preset-btn {
+            padding: 8px;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+            transition: all 0.2s;
+        }
+
+        .preset-btn:hover {
+            background: #e0e0e0;
+            border-color: #667eea;
+        }
+
+        .currency {
+            color: #764ba2;
+        }
+
+        .purchase-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .purchase-content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 420px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            position: relative;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #f0f0f0;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .close-modal:hover {
+            background: #e0e0e0;
+        }
+
+        .purchase-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .purchase-header h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .purchase-header p {
+            color: #999;
+            font-size: 0.9em;
+        }
+
+        .purchase-benefits {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+        }
+
+        .purchase-benefits h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+
+        .purchase-benefit {
+            color: #666;
+            margin: 6px 0;
+            line-height: 1.4;
+            font-size: 0.85em;
+        }
+
+        .purchase-pricing {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .price-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .price-tag {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .price-box p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .seller-info {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .seller-info p {
+            margin: 8px 0;
+            color: #333;
+            font-size: 0.95em;
+        }
+
+        .seller-info strong {
+            color: #667eea;
+        }
+
+        .purchase-methods {
+            display: grid;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .btn-payment {
+            padding: 12px;
+            background: #f0f0f0;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-payment:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .btn-skip {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            color: #666;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .seller-info {
+            background: #f0f0f0;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .seller-info p {
+            margin: 5px 0;
+            color: #333;
+            font-size: 0.85em;
+        }
+
+        .seller-info strong {
+            color: #667eea;
+        }
+
+        .btn-skip:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Tela Inicial de Boas-vindas -->
+        <div id="welcomeScreen" class="welcome-screen">
+            <div class="welcome-card">
+                <div class="welcome-header">
+                    <h1>⚡ Economize Eletricidade</h1>
+                    <p>Entenda seu consumo de energia</p>
+                </div>
+
+                <div class="welcome-content">
+                    <h2>Por que Analisar seu Gasto de Energia?</h2>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">💰</div>
+                        <div class="benefit-text">
+                            <strong>Economia Financeira</strong>
+                            <p>Identifique quais aparelhos consomem mais energia e onde você pode economizar dinheiro na conta de luz.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🌍</div>
+                        <div class="benefit-text">
+                            <strong>Impacto Ambiental</strong>
+                            <p>Reduzir o consumo de energia diminui a pegada de carbono e contribui para um planeta mais sustentável.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">📊</div>
+                        <div class="benefit-text">
+                            <strong>Conscientização</strong>
+                            <p>Compreender o consumo real de cada aparelho ajuda você a tomar melhores decisões no dia a dia.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🎯</div>
+                        <div class="benefit-text">
+                            <strong>Planejamento</strong>
+                            <p>Saiba quanto você gasta mensalmente e estabeleça metas realistas de redução de consumo.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item">
+                        <div class="benefit-icon">🔧</div>
+                        <div class="benefit-text">
+                            <strong>Decisões Inteligentes</strong>
+                            <p>Antes de comprar um novo aparelho, saiba quanto ele vai custar para funcionar por mês.</p>
+                        </div>
+                    </div>
+
+                    <div class="benefit-item alert-safety">
+                        <div class="benefit-icon">⚠️</div>
+                        <div class="benefit-text">
+                            <strong>Segurança da Sua Família</strong>
+                            <p>Um consumo muito acima do normal pode indicar sobrecarga na instalação elétrica. Isso gera <strong>excesso de calor nos fios</strong>, aumentando significativamente o risco de <strong>incêndios</strong>. Analisar seu consumo ajuda a prevenir acidentes graves e proteger sua família.</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-box">
+                        <h3>Dados Importantes:</h3>
+                        <p>📌 A maioria das residências brasileiras gasta entre <strong>R$ 150 a R$ 400</strong> por mês em energia elétrica.</p>
+                        <p>📌 Aparelhos como <strong>chuveiro, ar-condicionado e fogão</strong> são responsáveis por até <strong>70% do consumo</strong> total.</p>
+                        <p>📌 Pequenas mudanças de hábito podem resultar em <strong>economias de 20% a 30%</strong> na conta.</p>
+                    </div>
+
+                    <button class="btn-start" onclick="startAnalyzer()">Iniciar Análise →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Seção do Analisador -->
+        <div id="analyzerScreen" class="analyzer-screen" style="display: none;">
+            <header>
+                <h1>⚡ Analisador de Gasto de Energia</h1>
+                <p>Calcule o consumo mensal de seus eletrodomésticos</p>
+                <button class="btn-back" onclick="backToWelcome()">← Voltar</button>
+            </header>
+
+            <div class="main-content">
+            <!-- Formulário -->
+            <div class="card">
+                <h2>Adicione seus Eletrodomésticos</h2>
+
+                <div class="form-group">
+                    <label for="applianceName">Nome do Eletrodoméstico</label>
+                    <input type="text" id="applianceName" placeholder="Ex: Geladeira, Ar condicionado...">
+                </div>
+
+                <div class="form-group">
+                    <label for="wattage">Potência (Watts)</label>
+                    <input type="number" id="wattage" placeholder="Ex: 500" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="hoursPerDay">Horas de uso por dia</label>
+                    <input type="number" id="hoursPerDay" placeholder="Ex: 8" min="0" max="24" step="0.5">
+                </div>
+
+                <div class="form-group">
+                    <label for="daysPerMonth">Dias de uso por mês</label>
+                    <input type="number" id="daysPerMonth" placeholder="30" min="0" max="31" value="30">
+                </div>
+
+                <div class="preset-group">
+                    <label class="preset-label">Ou escolha um aparelho padrão:</label>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" onclick="addPreset('Geladeira', 150, 24, 30)">Geladeira</button>
+                        <button class="preset-btn" onclick="addPreset('Ar Condicionado', 2000, 8, 25)">Ar Cond.</button>
+                        <button class="preset-btn" onclick="addPreset('Chuveiro', 4500, 0.5, 30)">Chuveiro</button>
+                        <button class="preset-btn" onclick="addPreset('Máquina Lavar', 1500, 1.5, 8)">Máq. Lavar</button>
+                        <button class="preset-btn" onclick="addPreset('Microondas', 1000, 1, 30)">Microondas</button>
+                        <button class="preset-btn" onclick="addPreset('TV LED', 100, 6, 30)">TV LED</button>
+                        <button class="preset-btn" onclick="addPreset('Airfryer', 1500, 1, 25)">Airfryer</button>
+                        <button class="preset-btn" onclick="addPreset('Fogão Indução', 2200, 2.5, 30)">Fogão Indução</button>
+                        <button class="preset-btn" onclick="addPreset('Forno Elétrico', 2500, 1.5, 20)">Forno Elétrico</button>
+                        <button class="preset-btn" onclick="addPreset('Secadora', 4000, 1, 8)">Secadora</button>
+                        <button class="preset-btn" onclick="addPreset('Freezer', 300, 24, 30)">Freezer</button>
+                        <button class="preset-btn" onclick="addPreset('Videogame', 150, 4, 30)">Videogame</button>
+                        <button class="preset-btn" onclick="addPreset('Computador', 300, 8, 25)">Computador</button>
+                        <button class="preset-btn" onclick="addPreset('Notebook', 80, 6, 25)">Notebook</button>
+                        <button class="preset-btn" onclick="addPreset('Lâmpada LED', 15, 6, 30)">Lâmpada LED</button>
+                        <button class="preset-btn" onclick="addPreset('Ventilador', 100, 8, 25)">Ventilador</button>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-add" onclick="addAppliance()">Adicionar</button>
+                    <button class="btn-clear" onclick="clearForm()">Limpar</button>
+                </div>
+            </div>
+
+            <!-- Lista de Eletrodomésticos -->
+            <div class="card">
+                <h2>Seus Eletrodomésticos</h2>
+                <div class="appliance-list" id="applianceList">
+                    <div class="empty-state">Nenhum eletrodoméstico adicionado ainda</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Compra -->
+            <div id="purchaseModal" class="purchase-modal" style="display: none;">
+                <div class="purchase-content">
+                    <button class="close-modal" onclick="closePurchaseModal()">✕</button>
+                    <div class="purchase-header">
+                        <h2>🔓 Desbloquear Análise Completa</h2>
+                        <p>Veja os resultados detalhados do seu consumo</p>
+                    </div>
+
+                    <div class="purchase-benefits">
+                        <h3>O que você receberá:</h3>
+                        <div class="purchase-benefit">✓ Análise completa do consumo mensal</div>
+                        <div class="purchase-benefit">✓ Gráficos e comparações detalhadas</div>
+                        <div class="purchase-benefit">✓ Dicas personalizadas de economia</div>
+                        <div class="purchase-benefit">✓ Relatório para download</div>
+                        <div class="purchase-benefit">✓ Acesso permanente aos seus dados</div>
+                    </div>
+
+                    <div class="purchase-pricing">
+                        <div class="price-box">
+                            <div class="price-tag">R$ 29,90</div>
+                            <p>Análise Completa</p>
+                        </div>
+                    </div>
+
+                    <div class="seller-info">
+                        <p><strong>Recebedor:</strong> Renato B Alves</p>
+                        <p><strong>Email:</strong> renatobalves@gmail.com</p>
+                    </div>
+
+                    <div class="purchase-methods">
+                        <button class="btn-payment" onclick="openMercadoPago()">
+                            💳 Cartão de Crédito via Mercado Pago
+                        </button>
+                        <button class="btn-payment" onclick="showPixInfo()">
+                            💰 Pix
+                        </button>
+                        <button class="btn-payment" onclick="showBoletoInfo()">
+                            📄 Boleto Bancário
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Resultados -->
+            <div class="card" id="resultsCard" style="display: none;">
+                <h2>Análise de Consumo</h2>
+
+            <div class="results-grid">
+                <div class="result-box">
+                    <h3>Consumo Diário</h3>
+                    <div class="result-value"><span id="dailyConsumption">0</span> kWh</div>
+                </div>
+                <div class="result-box">
+                    <h3>Consumo Mensal</h3>
+                    <div class="result-value"><span id="monthlyConsumption">0</span> kWh</div>
+                </div>
+                <div class="result-box">
+                    <h3>Custo Mensal</h3>
+                    <div class="result-value"><span class="currency">R$</span><span id="monthlyCost">0,00</span></div>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-row">
+                    <span class="summary-label">Total de aparelhos:</span>
+                    <span class="summary-value" id="totalAppliances">0</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Potência total instalada:</span>
+                    <span class="summary-value"><span id="totalWattage">0</span> W</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Consumo médio por aparelho:</span>
+                    <span class="summary-value"><span id="averageConsumption">0</span> kWh/mês</span>
+                </div>
+                <div class="summary-row">
+                    <span class="summary-label">Tarifa de energia (kWh):</span>
+                    <span class="summary-value">
+                        <input type="number" id="tariff" value="0.75" step="0.01" style="width: 80px; padding: 5px;" onchange="calculateResults()">
+                        <span style="font-size: 0.8em; color: #999;">R$</span>
+                    </span>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let appliances = [];
+
+        function startAnalyzer() {
+            document.getElementById('welcomeScreen').style.display = 'none';
+            document.getElementById('analyzerScreen').style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function backToWelcome() {
+            document.getElementById('welcomeScreen').style.display = 'flex';
+            document.getElementById('analyzerScreen').style.display = 'none';
+            window.scrollTo(0, 0);
+        }
+
+        let analysisPurchased = false;
+
+        function showPurchaseModal() {
+            document.getElementById('purchaseModal').style.display = 'flex';
+        }
+
+        function closePurchaseModal() {
+            document.getElementById('purchaseModal').style.display = 'none';
+        }
+
+        function processPurchase(method) {
+            alert(`Simulando compra via ${method === 'credit' ? 'Cartão de Crédito' : method === 'pix' ? 'Pix' : 'Boleto'}...\n\nAnálise desbloqueada com sucesso!`);
+            analysisPurchased = true;
+            closePurchaseModal();
+            document.getElementById('resultsCard').style.display = 'block';
+        }
+
+        function openMercadoPago() {
+            const mercadoPagoLink = 'https://link.mercadopago.com.br/economizeeletricidad';
+            window.open(mercadoPagoLink, '_blank');
+            setTimeout(() => {
+                analysisPurchased = true;
+                closePurchaseModal();
+                document.getElementById('resultsCard').style.display = 'block';
+            }, 1000);
+        }
+
+        function showPixInfo() {
+            const pixMessage = `Realize o pagamento via Pix para:\n\nrenatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós o pagamento, sua análise será desbloqueada automaticamente.`;
+            alert(pixMessage);
+            analysisPurchased = true;
+            closePurchaseModal();
+            document.getElementById('resultsCard').style.display = 'block';
+        }
+
+        function showBoletoInfo() {
+            const boletoMessage = `Para receber um boleto, entre em contato:\n\nEmail: renatobalves@gmail.com\n\nValor: R$ 29,90\n\nApós o pagamento confirmado, sua análise será desbloqueada.`;
+            alert(boletoMessage);
+            analysisPurchased = true;
+            closePurchaseModal();
+            document.getElementById('resultsCard').style.display = 'block';
+        }
+
+        function addPreset(name, wattage, hours, days) {
+            document.getElementById('applianceName').value = name;
+            document.getElementById('wattage').value = wattage;
+            document.getElementById('hoursPerDay').value = hours;
+            document.getElementById('daysPerMonth').value = days;
+        }
+
+        function addAppliance() {
+            const name = document.getElementById('applianceName').value.trim();
+            const wattage = parseFloat(document.getElementById('wattage').value);
+            const hoursPerDay = parseFloat(document.getElementById('hoursPerDay').value);
+            const daysPerMonth = parseFloat(document.getElementById('daysPerMonth').value);
+
+            if (!name || isNaN(wattage) || isNaN(hoursPerDay) || isNaN(daysPerMonth)) {
+                alert('Por favor, preencha todos os campos com valores válidos');
+                return;
+            }
+
+            if (wattage < 0 || hoursPerDay < 0 || daysPerMonth < 0) {
+                alert('Os valores não podem ser negativos');
+                return;
+            }
+
+            const isFirstAppliance = appliances.length === 0;
+
+            appliances.push({
+                id: Date.now(),
+                name,
+                wattage,
+                hoursPerDay,
+                daysPerMonth
+            });
+
+            clearForm();
+            renderAppliances();
+            calculateResults();
+
+            if (isFirstAppliance && !analysisPurchased) {
+                setTimeout(() => {
+                    showPurchaseModal();
+                }, 300);
+            }
+        }
+
+        function deleteAppliance(id) {
+            appliances = appliances.filter(app => app.id !== id);
+            renderAppliances();
+            calculateResults();
+        }
+
+        function clearForm() {
+            document.getElementById('applianceName').value = '';
+            document.getElementById('wattage').value = '';
+            document.getElementById('hoursPerDay').value = '';
+            document.getElementById('daysPerMonth').value = '30';
+        }
+
+        function renderAppliances() {
+            const list = document.getElementById('applianceList');
+
+            if (appliances.length === 0) {
+                list.innerHTML = '<div class="empty-state">Nenhum eletrodoméstico adicionado ainda</div>';
+                return;
+            }
+
+            list.innerHTML = appliances.map(app => {
+                const dailyConsumption = (app.wattage * app.hoursPerDay) / 1000;
+                const monthlyConsumption = dailyConsumption * app.daysPerMonth;
+
+                return `
+                    <div class="appliance-item">
+                        <div class="appliance-info">
+                            <div class="appliance-name">${app.name}</div>
+                            <div class="appliance-details">
+                                <strong>${app.wattage}W</strong> •
+                                ${app.hoursPerDay}h/dia •
+                                ${app.daysPerMonth} dias/mês
+                            </div>
+                            <div class="appliance-consumption">
+                                ${monthlyConsumption.toFixed(2)} kWh/mês
+                            </div>
+                        </div>
+                        <button class="btn-delete" onclick="deleteAppliance(${app.id})">✕</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateResults() {
+            let totalDailyConsumption = 0;
+            let totalWattage = 0;
+
+            appliances.forEach(app => {
+                totalWattage += app.wattage;
+                const dailyConsumption = (app.wattage * app.hoursPerDay) / 1000;
+                totalDailyConsumption += dailyConsumption;
+            });
+
+            const tariff = parseFloat(document.getElementById('tariff').value) || 0;
+            const totalMonthlyConsumption = appliances.reduce((sum, app) => {
+                return sum + ((app.wattage * app.hoursPerDay * app.daysPerMonth) / 1000);
+            }, 0);
+
+            const monthlyCost = totalMonthlyConsumption * tariff;
+            const averageConsumption = appliances.length > 0 ? totalMonthlyConsumption / appliances.length : 0;
+
+            document.getElementById('dailyConsumption').textContent = totalDailyConsumption.toFixed(2);
+            document.getElementById('monthlyConsumption').textContent = totalMonthlyConsumption.toFixed(2);
+            document.getElementById('monthlyCost').textContent = monthlyCost.toFixed(2).replace('.', ',');
+            document.getElementById('totalAppliances').textContent = appliances.length;
+            document.getElementById('totalWattage').textContent = totalWattage.toLocaleString('pt-BR');
+            document.getElementById('averageConsumption').textContent = averageConsumption.toFixed(2);
+        }
+
+        // Inicializar
+        calculateResults();
+    </script>
+</body>
+</html>
