@@ -991,8 +991,8 @@
                     </div>
 
                     <div class="purchase-methods">
-                        <button class="btn-payment" onclick="openMercadoPago()">
-                            💳 Pagar com Cartão de Crédito
+                        <button class="btn-payment" onclick="openMercadoPago()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 15px;">
+                            🔗 Acessar Link de Pagamento
                         </button>
                     </div>
 
@@ -1049,7 +1049,7 @@
 
         // URL do servidor (mude para sua URL em produção)
         const API_URL = 'http://localhost:3000';
-        const MERCADO_PAGO_LINK = 'https://link.mercadopago.com.br/economizeeletricidad';
+        const MERCADO_PAGO_LINK = 'https://mpago.la/1F9qQn4';
 
         function startAnalyzer() {
             document.getElementById('welcomeScreen').style.display = 'none';
@@ -1082,28 +1082,24 @@
 
         async function openMercadoPago() {
             try {
-                // Cria uma sessão de pagamento
-                const response = await fetch(`${API_URL}/api/create-session`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                // Gera ID único para este pedido
+                const orderId = 'order_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                currentSessionId = orderId;
 
-                const data = await response.json();
-                currentSessionId = data.sessionId;
+                // Salva o ID do pedido no localStorage
+                localStorage.setItem('paymentSessionId', orderId);
+                localStorage.setItem('lastOrderTime', Date.now());
 
-                // Salva a sessão no localStorage para verificar depois
-                localStorage.setItem('paymentSessionId', currentSessionId);
+                alert('Você será redirecionado para o Mercado Pago.\n\nApós completar o pagamento, retorne aqui e sua análise será desbloqueada automaticamente!');
 
-                alert('Você será redirecionado para o Mercado Pago.\n\nApós completar o pagamento, sua análise será desbloqueada automaticamente!');
-
-                // Abre o link do Mercado Pago
+                // Abre o link do Mercado Pago em uma nova aba
                 window.open(MERCADO_PAGO_LINK, '_blank');
 
                 // Começa a verificar se o pagamento foi confirmado
                 checkPaymentStatus();
 
             } catch (error) {
-                console.error('Erro ao criar sessão:', error);
+                console.error('Erro ao processar pagamento:', error);
                 alert('Erro ao processar pagamento. Tente novamente.');
             }
         }
@@ -1112,11 +1108,15 @@
             const sessionId = localStorage.getItem('paymentSessionId');
             if (!sessionId) return;
 
-            // Verifica a cada 3 segundos se o pagamento foi confirmado
+            console.log('Verificando pagamento para sessão:', sessionId);
+
+            // Verifica a cada 2 segundos se o pagamento foi confirmado
             const checkInterval = setInterval(async () => {
                 try {
                     const response = await fetch(`${API_URL}/api/check-payment/${sessionId}`);
                     const data = await response.json();
+
+                    console.log('Status do pagamento:', data);
 
                     if (data.paid) {
                         clearInterval(checkInterval);
@@ -1124,15 +1124,19 @@
                         closePurchaseModal();
                         document.getElementById('resultsCard').style.display = 'block';
                         localStorage.removeItem('paymentSessionId');
-                        alert('✅ Pagamento confirmado! Sua análise foi desbloqueada.');
+                        localStorage.removeItem('lastOrderTime');
+                        alert('✅ Pagamento confirmado com sucesso!\n\nSua análise foi desbloqueada. Aproveite!');
                     }
                 } catch (error) {
                     console.error('Erro ao verificar pagamento:', error);
                 }
-            }, 3000);
+            }, 2000);
 
-            // Para de verificar após 15 minutos
-            setTimeout(() => clearInterval(checkInterval), 15 * 60 * 1000);
+            // Para de verificar após 20 minutos
+            setTimeout(() => {
+                clearInterval(checkInterval);
+                console.log('Verificação de pagamento encerrada (timeout)');
+            }, 20 * 60 * 1000);
         }
 
 
