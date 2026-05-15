@@ -1,179 +1,111 @@
-# ⚡ Economize Eletricidade - Analisador de Gasto de Energia
+# ⚡ Economize Eletricidade - VERSÃO VIP
 
-Sistema completo com pagamento integrado ao Mercado Pago para análise de consumo de energia elétrica.
+Analisador Premium de gasto de energia **completo e sem complicações**!
 
----
+## 🎖️ O que é VIP?
 
-## 📋 PRÉ-REQUISITOS
+Uma versão **premium** e simplificada do analisador que:
+- ✅ Funciona completamente offline
+- ✅ Sem necessidade de pagamento ou backend complexo
+- ✅ Sem integração com Mercado Pago
+- ✅ Interface premium e elegante
+- ✅ Fácil de hospedar em qualquer lugar
+- ✅ Funciona em qualquer navegador (desktop, mobile, tablet)
+- ✅ Design exclusivo com badge VIP
 
-- Node.js 18+ instalado ([Baixar aqui](https://nodejs.org/))
-- Conta no Mercado Pago ([Criar conta](https://www.mercadopago.com.br))
-- Git instalado
+## 🚀 Como Usar?
 
----
+### Opção 1: Abrir Localmente
+1. Baixe o arquivo `analisador_energia_vip.html`
+2. Clique duas vezes para abrir no navegador
+3. Pronto! Funciona imediatamente
 
-## 🚀 INSTALAÇÃO LOCAL
+### Opção 2: Hospedar Online (Grátis)
 
-### 1️⃣ Clonar ou fazer download do projeto
+**GitHub Pages:**
+1. Crie um repositório no GitHub
+2. Faça upload do arquivo `analisador_energia_vip.html`
+3. Ative GitHub Pages nas configurações
+4. Seu site estará disponível em: `seu-usuario.github.io/seu-repo`
 
-```bash
-cd economizeeletricidade
-npm install
-```
+**Netlify (Recomendado):**
+1. Acesse: https://netlify.com
+2. Faça drag-drop do arquivo
+3. Seu site estará online em minutos
 
-### 2️⃣ Configurar variáveis de ambiente
+**Vercel:**
+1. Acesse: https://vercel.com
+2. Envie o arquivo
+3. Deploy automático
 
-Abra o arquivo `.env` e preencha com seus dados do Mercado Pago:
+## 📋 O que o site faz?
 
-```
-MERCADO_PAGO_ACCESS_TOKEN=seu_access_token_aqui
-MERCADO_PAGO_PUBLIC_KEY=sua_public_key_aqui
-MERCADO_PAGO_WEBHOOK_TOKEN=seu_webhook_token_aqui
-```
+1. **Adicionar eletrodomésticos** - Insira nome, potência e horas de uso
+2. **Calcular consumo** - Mostra kWh/dia e kWh/mês
+3. **Calcular custo** - Baseado na tarifa de energia (ajustável)
+4. **Visualizar resumo** - Total de aparelhos, potência, média de consumo
+5. **Interface Premium** - Design exclusivo com badge VIP
 
-**Como obter as chaves?**
-1. Acesse: [Mercado Pago Credenciais](https://www.mercadopago.com.br/settings/account/credentials)
-2. Copie seu Access Token
-3. Copie sua Public Key
+## 💎 Por que VIP?
 
-### 3️⃣ Rodar o servidor localmente
+- **Premium**: Branding VIP exclusivo
+- **Funcional**: Todas as funcionalidades necessárias
+- **Simples**: Sem complexidade desnecessária
+- **Confiável**: Código limpo e direto
+- **Rápido**: Funciona sem servidor
 
-```bash
-npm start
-```
+## 📱 Responsivo?
 
-Seu site estará em: `http://localhost:3000`
+Sim! Funciona perfeitamente em:
+- 💻 Desktops
+- 📱 Celulares
+- 📲 Tablets
 
-### 4️⃣ Testar o pagamento
+## 🔒 Dados Pessoais?
 
-Para testes locais, abra o DevTools do navegador (F12) e execute:
+- Seus dados NÃO são salvos
+- NÃO há servidor coletando informações
+- Tudo acontece localmente no seu computador
+- Use com privacidade total!
 
-```javascript
-fetch('http://localhost:3000/api/test-payment/test_session_123', {
-    method: 'POST'
-}).then(r => r.json()).then(console.log);
-```
+## ✨ Características
 
-Isso simula um pagamento confirmado.
+- Interface moderna e elegante
+- Badge VIP exclusivo
+- 16 aparelhos pré-configurados
+- Cálculos automáticos em tempo real
+- Tela inicial informativa
+- Design responsivo e adaptável
+- Mensagens de segurança importantes
 
----
+## 🎨 Customizações
 
-## 🌐 DEPLOY EM PRODUÇÃO
+Este arquivo é um HTML puro. Se quiser:
+- Customizar cores → Edite o CSS
+- Adicionar mais aparelhos → Edite o JavaScript
+- Mudar textos → Edite o HTML
 
-### Opção 1: Railway (Recomendado) ⭐
+Tudo é simples e está em um único arquivo!
 
-**Railway é grátis e fácil!**
+## 🌟 Diferenças entre Versões
 
-1. Acesse: [railway.app](https://railway.app)
-2. Clique em "Start a New Project"
-3. Selecione "Deploy from GitHub"
-4. Conecte seu repositório GitHub
-5. Configure as variáveis de ambiente (.env)
-6. Deploy automático!
+| Recurso | Versão Paga | Versão VIP |
+|---------|----------|----------|
+| Pagamento | Obrigatório | Não necessário |
+| Backend | Sim (Node.js) | Não |
+| Banco de Dados | Sim | Não |
+| Webhooks | Sim | Não |
+| Funcionalidades | Iguais | Iguais |
+| Design | Padrão | VIP Exclusivo |
+| Hosting | Railway/Heroku | Anywhere |
+| Ideal para | Monetizar | Compartilhar |
 
-**Seu URL será algo como:** `seu-projeto-random.railway.app`
+## 📞 Suporte
 
-### Opção 2: Heroku
-
-1. Instale o Heroku CLI
-2. Execute:
-```bash
-heroku login
-heroku create seu-projeto-economize
-git push heroku main
-heroku config:set MERCADO_PAGO_ACCESS_TOKEN=seu_token
-```
-
-### Opção 3: Replit
-
-1. Acesse: [replit.com](https://replit.com)
-2. Crie um novo projeto Node.js
-3. Faça upload dos arquivos
-4. Configure .env
-5. Clique em "Run"
-
----
-
-## 🔗 CONFIGURAR WEBHOOK DO MERCADO PAGO
-
-Após fazer deploy, você precisa registrar o webhook no Mercado Pago:
-
-1. Acesse: [Mercado Pago - Webhooks](https://www.mercadopago.com.br/developers/pt/guides/webhooks/v1/overview)
-2. Adicione uma nova notificação com:
-   - **URL:** `https://seu-dominio.com/api/webhook/mercadopago`
-   - **Eventos:** `payment.created` e `payment.updated`
-
----
-
-## 📊 COMO FUNCIONA
-
-1. **Cliente acessa o site**
-2. **Adiciona seus eletrodomésticos**
-3. **Modal de pagamento aparece**
-4. **Clica em "Pagar com Cartão"**
-5. **Redirecionado para seu link do Mercado Pago**
-6. **Sistema verifica a cada 3 segundos se pagamento foi confirmado**
-7. **Assim que confirmado, análise é desbloqueada**
-
----
-
-## 💾 ESTRUTURA DE ARQUIVOS
-
-```
-economizeeletricidade/
-├── server.js              # Servidor backend
-├── analisador_energia.html # Frontend
-├── package.json           # Dependências
-├── .env                   # Variáveis de ambiente
-├── .gitignore            # Arquivos a ignorar no Git
-├── payments.json         # Histórico de pagamentos (criado automaticamente)
-└── README.md            # Este arquivo
-```
-
----
-
-## 🔐 SEGURANÇA
-
-⚠️ **IMPORTANTE:**
-
-- Nunca compartilhe suas chaves do Mercado Pago
-- Sempre use HTTPS em produção
-- O arquivo `.env` nunca deve ser enviado ao GitHub
-- Sempre verifique o status do pagamento na API do Mercado Pago
-
----
-
-## 🐛 TROUBLESHOOTING
-
-### "Erro de conexão ao servidor"
-- Verificar se o servidor está rodando
-- Verificar se a URL no código está correta
-- Verificar se há erro de CORS
-
-### "Webhook não está recebendo"
-- Verificar se a URL do webhook está correta no Mercado Pago
-- Verificar se o servidor está online
-- Testar com: `curl -X POST https://seu-dominio.com/api/webhook/mercadopago`
-
-### "Pagamento não é confirmado"
-- Verificar os logs do servidor
-- Verificar se o Access Token está correto
-- Testar com a API de teste do Mercado Pago
-
----
-
-## 📞 SUPORTE
-
-- Docs Mercado Pago: [developers.mercadopago.com.br](https://developers.mercadopago.com.br)
-- Express.js Docs: [expressjs.com](https://expressjs.com)
-- Problemas? Verifique os logs do servidor
-
----
-
-## 📄 LICENÇA
-
-Este projeto é proprietário. Todos os direitos reservados.
+Este é um arquivo HTML puro. Qualquer navegador moderno funciona!
 
 ---
 
 **Desenvolvido com ❤️ por Renato B Alves**
+
+Premium Analytics for Energy Consumption ⚡
