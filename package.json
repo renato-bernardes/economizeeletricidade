@@ -1,0 +1,26 @@
+{
+  "name": "economizeeletricidade",
+  "version": "1.0.0",
+  "description": "Analisador de gasto de energia com pagamento integrado",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": ["energia", "eletricidade", "análise"],
+  "author": "Renato B Alves",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.0.3",
+    "axios": "^1.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}
